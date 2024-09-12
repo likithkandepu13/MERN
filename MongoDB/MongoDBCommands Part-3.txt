@@ -1,0 +1,181 @@
+Microsoft Windows [Version 10.0.22631.3085]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\adnan shariff>mongosh
+Current Mongosh Log ID: 65cb00f86c88aad6265a1956
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.1.1
+Using MongoDB:          6.0.8
+Using Mongosh:          2.1.1
+mongosh 2.1.4 is available for download: https://www.mongodb.com/try/download/shell
+
+For mongosh info see: https://docs.mongodb.com/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2024-02-09T21:51:43.013+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+test> show dbs
+admin       40.00 KiB
+config      84.00 KiB
+local      120.00 KiB
+studentdb  128.00 KiB
+test> use studentdb
+switched to db studentdb
+studentdb> show collections
+emp
+student
+studentdb> db.emp.find({})
+[
+  { _id: 1, name: 'A', gender: 'FEMALE', salary: 10000.5 },
+  { _id: 2, name: 'B', gender: 'MALE', salary: 20000.5 },
+  { _id: 3, name: 'C', gender: 'MALE', salary: 30000.5 },
+  { _id: 4, name: 'C', gender: 'MALE', salary: 40000.5 }
+]
+studentdb> db.emp.find({}).sort({salary:-1}).limit(1)
+[ { _id: 4, name: 'C', gender: 'MALE', salary: 40000.5 } ]
+studentdb> db.emp.find({name:1}).sort({salary:-1}).limit(1)
+
+studentdb> db.emp.find({},{name:1,_id:0}).sort({salary:-1}).limit(1)
+[ { name: 'C' } ]
+studentdb> //aggregate functions or multi-document functions
+
+studentdb> db.emp.aggregate({$count:"totalcount"})
+[ { totalcount: 4 } ]
+studentdb> db.emp.find({})
+[
+  { _id: 1, name: 'A', gender: 'FEMALE', salary: 10000.5 },
+  { _id: 2, name: 'B', gender: 'MALE', salary: 20000.5 },
+  { _id: 3, name: 'C', gender: 'MALE', salary: 30000.5 },
+  { _id: 4, name: 'C', gender: 'MALE', salary: 40000.5 }
+]
+studentdb> db.emp.aggregate({$group:{_id:null,totalsal:{$sum:"$salary"}}})
+[ { _id: null, totalsal: 100002 } ]
+studentdb> db.emp.aggregate({$group:{_id:"$gender",totalsal:{$sum:"$salary"}}})
+[
+  { _id: 'FEMALE', totalsal: 10000.5 },
+  { _id: 'MALE', totalsal: 90001.5 }
+]
+studentdb> db.emp.aggregate({$group:{_id:"$name",totalsal:{$sum:"$salary"}}})
+[
+  { _id: 'A', totalsal: 10000.5 },
+  { _id: 'C', totalsal: 70001 },
+  { _id: 'B', totalsal: 20000.5 }
+]
+studentdb> db.emp.aggregate({$group:{_id:"$name",totalsal:{$sum:"$salary"}}}).sort()
+MongoServerError: the $sort key specification must be an object
+studentdb> db.emp.aggregate({$group:{_id:"$gender",totalsal:{$avg:"$salary"}}})
+[
+  { _id: 'MALE', totalsal: 30000.5 },
+  { _id: 'FEMALE', totalsal: 10000.5 }
+]
+studentdb> db.emp.aggregate({$group:{_id:null,totalsal:{$avg:"$salary"}}})
+[ { _id: null, totalsal: 25000.5 } ]
+studentdb> db.emp.aggregate({$group:{_id:null,avgsal:{$avg:"$salary"}}})
+[ { _id: null, avgsal: 25000.5 } ]
+studentdb> db.emp.aggregate({$group:{_id:null,avgsal:{$min:"$salary"}}})
+[ { _id: null, avgsal: 10000.5 } ]
+studentdb> db.emp.aggregate({$group:{_id:null,avgsal:{$max:"$salary"}}})
+[ { _id: null, avgsal: 40000.5 } ]
+studentdb> db.emp.aggregate({$group:{_id:null,maxsal:{$max:"$salary"}}})
+[ { _id: null, maxsal: 40000.5 } ]
+studentdb> db.emp.aggregate({$group:{_id:null,minsal:{$min:"$salary"}}})
+[ { _id: null, minsal: 10000.5 } ]
+studentdb> db.emp.aggregate({$group:{_id:"$gender",totalsal:{$sum:"$salary"}}})
+[
+  { _id: 'FEMALE', totalsal: 10000.5 },
+  { _id: 'MALE', totalsal: 90001.5 }
+]
+studentdb> db.emp.aggregate({$group:{_id:"$gender",avgsal:{$avg:"$salary"}}})
+[
+  { _id: 'MALE', avgsal: 30000.5 },
+  { _id: 'FEMALE', avgsal: 10000.5 }
+]
+studentdb> db.emp.aggregate({$group:{_id:"$gender",minsal:{$min:"$salary"}}})
+[
+  { _id: 'FEMALE', minsal: 10000.5 },
+  { _id: 'MALE', minsal: 20000.5 }
+]
+studentdb> db.emp.aggregate({$group:{_id:"$gender",maxsal:{$max:"$salary"}}})
+[
+  { _id: 'FEMALE', maxsal: 10000.5 },
+  { _id: 'MALE', maxsal: 40000.5 }
+]
+studentdb> db.emp.aggregate.({$match:{gender:"MALE"}})
+Uncaught:
+SyntaxError: Unexpected token (1:17)
+
+> 1 | db.emp.aggregate.({$match:{gender:"MALE"}})
+    |                  ^
+  2 |
+
+studentdb> db.emp.aggregate({$match:{gender:"MALE"}})
+[
+  { _id: 2, name: 'B', gender: 'MALE', salary: 20000.5 },
+  { _id: 3, name: 'C', gender: 'MALE', salary: 30000.5 },
+  { _id: 4, name: 'C', gender: 'MALE', salary: 40000.5 }
+]
+studentdb> db.emp.aggregate([{$match:{gender:"MALE"}},{$group:{_id:null,totalsal:{$sum:"$salary"}}}])
+[ { _id: null, totalsal: 90001.5 } ]
+studentdb> db.emp.aggregate([{$match:{gender:"MALE"}},{$group:{_id:"$gender",totalsal:{$sum:"$salary"}}}])
+[ { _id: 'MALE', totalsal: 90001.5 } ]
+studentdb> db.emp.aggregate([{$match:{}},{$group:{_id:"$gender",totalsal:{$sum:"$salary"}}}])
+[
+  { _id: 'FEMALE', totalsal: 10000.5 },
+  { _id: 'MALE', totalsal: 90001.5 }
+]
+studentdb> db.emp.aggregate([{$match:{}},{$group:{_id:"$gender",totalsal:{$sum:"$salary"}}},{$project:{_id:0}}])
+[ { totalsal: 90001.5 }, { totalsal: 10000.5 } ]
+studentdb> db.emp.aggregate([{$match:{}},{$group:{_id:"$gender",totalsal:{$sum:"$salary"}}},{$project:{_id:0}},{$sort:{totalsal:1}}])
+[ { totalsal: 10000.5 }, { totalsal: 90001.5 } ]
+studentdb> db.emp.aggregate([{$match:{}},{$group:{_id:"$gender",totalsal:{$sum:"$salary"}}},{$project:{_id:0}},{$sort:{totalsal:-1}}])
+[ { totalsal: 90001.5 }, { totalsal: 10000.5 } ]
+studentdb> db.emp.aggregate([{$match:{}},{$group:{_id:"$gender",totalsal:{$sum:"$salary"}}},{$project:{_id:0}},{$sort:{totalsal:-1}},{$limit:1}])
+[ { totalsal: 90001.5 } ]
+studentdb> db.emp.find({})
+[
+  { _id: 1, name: 'A', gender: 'FEMALE', salary: 10000.5 },
+  { _id: 2, name: 'B', gender: 'MALE', salary: 20000.5 },
+  { _id: 3, name: 'C', gender: 'MALE', salary: 30000.5 },
+  { _id: 4, name: 'C', gender: 'MALE', salary: 40000.5 }
+]
+studentdb> db.emp.updateMany({},{$set:{location:"VIZAG"}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 4,
+  modifiedCount: 4,
+  upsertedCount: 0
+}
+studentdb> db.emp.updateMany({},{$unset:{location:""}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 4,
+  modifiedCount: 4,
+  upsertedCount: 0
+}
+studentdb> db.emp.find()
+[
+  { _id: 1, name: 'A', gender: 'FEMALE', salary: 10000.5 },
+  { _id: 2, name: 'B', gender: 'MALE', salary: 20000.5 },
+  { _id: 3, name: 'C', gender: 'MALE', salary: 30000.5 },
+  { _id: 4, name: 'C', gender: 'MALE', salary: 40000.5 }
+]
+studentdb> db.emp.find({salary:{$not:{$gt:20000}}})
+[ { _id: 1, name: 'A', gender: 'FEMALE', salary: 10000.5 } ]
+studentdb> db.emp.aggregate([{$match:{}},{$out:"faculty"}])
+
+studentdb> show collections
+emp
+faculty
+student
+studentdb> db.faculty.find()
+[
+  { _id: 1, name: 'A', gender: 'FEMALE', salary: 10000.5 },
+  { _id: 2, name: 'B', gender: 'MALE', salary: 20000.5 },
+  { _id: 3, name: 'C', gender: 'MALE', salary: 30000.5 },
+  { _id: 4, name: 'C', gender: 'MALE', salary: 40000.5 }
+]
+studentdb>
+

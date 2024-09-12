@@ -1,0 +1,375 @@
+MongoDBCommands Part -2
+
+
+
+
+test> show dbs
+admin       40.00 KiB
+config      72.00 KiB
+local      120.00 KiB
+studentdb   72.00 KiB
+test> use studentdb
+switched to db studentdb
+studentdb> db
+studentdb
+studentdb> show collections
+student
+studentdb> db.student.find()
+
+studentdb> db.student.updateMany({},{$set:{gender:"FEMALE"}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 2,
+  modifiedCount: 2,
+  upsertedCount: 0
+}
+studentdb> db.student.find()
+[
+  {
+    _id: ObjectId('65c35f7db7d9b113960911a7'),
+    sid: 30001,
+    sname: 'KLU',
+    gender: 'FEMALE'
+  },
+  {
+    _id: ObjectId('65c36070b7d9b113960911a8'),
+    sid: 30002,
+    sname: 'klef',
+    gender: 'FEMALE'
+  }
+]
+studentdb> db.student.updateOne({sid:30002},{$set:{sname:"RAMA"}}
+... )
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+studentdb> db.student.find()
+[
+  {
+    _id: ObjectId('65c35f7db7d9b113960911a7'),
+    sid: 30001,
+    sname: 'KLU',
+    gender: 'FEMALE'
+  },
+  {
+    _id: ObjectId('65c36070b7d9b113960911a8'),
+    sid: 30002,
+    sname: 'RAMA',
+    gender: 'FEMALE'
+  }
+]
+studentdb> db.student.updateMany({sid:30003},{$set:{sname:"SRINU",gender:"MALE"}},{upsert:true})
+{
+  acknowledged: true,
+  insertedId: ObjectId('65ca5c5a553c341947e4ab94'),
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 1
+}
+studentdb> db.student.find()
+[
+  {
+    _id: ObjectId('65c35f7db7d9b113960911a7'),
+    sid: 30001,
+    sname: 'KLU',
+    gender: 'FEMALE'
+  },
+  {
+    _id: ObjectId('65c36070b7d9b113960911a8'),
+    sid: 30002,
+    sname: 'RAMA',
+    gender: 'FEMALE'
+  },
+  {
+    _id: ObjectId('65ca5c5a553c341947e4ab94'),
+    sid: 30003,
+    gender: 'MALE',
+    sname: 'SRINU'
+  }
+]
+studentdb> db.student.find({},{sname:1})
+[
+  { _id: ObjectId('65c35f7db7d9b113960911a7'), sname: 'KLU' },
+  { _id: ObjectId('65c36070b7d9b113960911a8'), sname: 'RAMA' },
+  { _id: ObjectId('65ca5c5a553c341947e4ab94'), sname: 'SRINU' }
+]
+studentdb> db.student.find({},{sname:1,_id:0})
+[ { sname: 'KLU' }, { sname: 'RAMA' }, { sname: 'SRINU' } ]
+studentdb> db.student.updateOne({sid:30001},{$set:{sname:"KLU"}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+studentdb> db.student.distinct("MALE")
+[]
+studentdb> db.student.distinct("gender")
+[ 'FEMALE', 'MALE' ]
+studentdb> db.student.find({}).size()
+3
+studentdb> db.student.find({gender:"MALE"}).size()
+1
+studentdb> db.student.find({gender:"FEMAKE"}).size()
+0
+studentdb> db.student.find({gender:"FEMALE"}).size()
+2
+studentdb> db.student.countDocument({gender:"FEMALE"})
+TypeError: db.student.countDocument is not a function
+studentdb> db.student.countDocument({gender:"FEMALE"})
+TypeError: db.student.countDocument is not a function
+studentdb> db.student.countDocuments({gender:"FEMALE"})
+2
+studentdb> db.student.countDocuments({})
+3
+studentdb> db.createCollection("emp")
+{ ok: 1 }
+studentdb> show collections
+emp
+student
+studentdb> db.emp.insertMany([{_id:1,name:"A"},{_id:2,name:"B"}])
+{ acknowledged: true, insertedIds: { '0': 1, '1': 2 } }
+studentdb> db.emp.insertMany([{_id:3,name:"C"},{_id:4,name:"C"}])
+{ acknowledged: true, insertedIds: { '0': 3, '1': 4 } }
+studentdb> db.emp.find({})
+[
+  { _id: 1, name: 'A' },
+  { _id: 2, name: 'B' },
+  { _id: 3, name: 'C' },
+  { _id: 4, name: 'C' }
+]
+studentdb> db.emp.updateOne({_id:1},{$set:{sal:10000.5}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+studentdb> db.emp.find()
+[
+  { _id: 1, name: 'A', sal: 10000.5 },
+  { _id: 2, name: 'B' },
+  { _id: 3, name: 'C' },
+  { _id: 4, name: 'C' }
+]
+studentdb> db.emp.updateOne({_id:2},{$set:{sal:20000.5}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+studentdb> db.emp.updateOne({_id:3},{$set:{sal:30000.5}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+studentdb> db.emp.updateOne({_id:4},{$set:{sal:40000.5}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+studentdb> db.emp.find()
+[
+  { _id: 1, name: 'A', sal: 10000.5 },
+  { _id: 2, name: 'B', sal: 20000.5 },
+  { _id: 3, name: 'C', sal: 30000.5 },
+  { _id: 4, name: 'C', sal: 40000.5 }
+]
+studentdb> db.emp.updateMany({},{$set:{gender:"FEMALE"}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 4,
+  modifiedCount: 4,
+  upsertedCount: 0
+}
+studentdb> db.emp.find()
+[
+  { _id: 1, name: 'A', sal: 10000.5, gender: 'FEMALE' },
+  { _id: 2, name: 'B', sal: 20000.5, gender: 'FEMALE' },
+  { _id: 3, name: 'C', sal: 30000.5, gender: 'FEMALE' },
+  { _id: 4, name: 'C', sal: 40000.5, gender: 'FEMALE' }
+]
+studentdb> db.emp.find({sal:{$gt:20000.5}})
+[
+  { _id: 3, name: 'C', sal: 30000.5, gender: 'FEMALE' },
+  { _id: 4, name: 'C', sal: 40000.5, gender: 'FEMALE' }
+]
+studentdb> db.emp.find({sal:{$lt:20000.5}})
+[ { _id: 1, name: 'A', sal: 10000.5, gender: 'FEMALE' } ]
+studentdb> db.emp.find({sal:{$lte:20000.5}})
+[
+  { _id: 1, name: 'A', sal: 10000.5, gender: 'FEMALE' },
+  { _id: 2, name: 'B', sal: 20000.5, gender: 'FEMALE' }
+]
+studentdb> db.emp.find({sal:{$lte:30000.5}})
+[
+  { _id: 1, name: 'A', sal: 10000.5, gender: 'FEMALE' },
+  { _id: 2, name: 'B', sal: 20000.5, gender: 'FEMALE' },
+  { _id: 3, name: 'C', sal: 30000.5, gender: 'FEMALE' }
+]
+studentdb> db.emp.find({sal:{$gte:30000.5}})
+[
+  { _id: 3, name: 'C', sal: 30000.5, gender: 'FEMALE' },
+  { _id: 4, name: 'C', sal: 40000.5, gender: 'FEMALE' }
+]
+studentdb> db.emp.find({sal:{$ne:30000.5}})
+[
+  { _id: 1, name: 'A', sal: 10000.5, gender: 'FEMALE' },
+  { _id: 2, name: 'B', sal: 20000.5, gender: 'FEMALE' },
+  { _id: 4, name: 'C', sal: 40000.5, gender: 'FEMALE' }
+]
+studentdb> db.emp.find()
+[
+  { _id: 1, name: 'A', sal: 10000.5, gender: 'FEMALE' },
+  { _id: 2, name: 'B', sal: 20000.5, gender: 'FEMALE' },
+  { _id: 3, name: 'C', sal: 30000.5, gender: 'FEMALE' },
+  { _id: 4, name: 'C', sal: 40000.5, gender: 'FEMALE' }
+]
+studentdb> db.emp.find().sort({sal:1})
+[
+  { _id: 1, name: 'A', sal: 10000.5, gender: 'FEMALE' },
+  { _id: 2, name: 'B', sal: 20000.5, gender: 'FEMALE' },
+  { _id: 3, name: 'C', sal: 30000.5, gender: 'FEMALE' },
+  { _id: 4, name: 'C', sal: 40000.5, gender: 'FEMALE' }
+]
+studentdb> db.emp.find().sort({sal:~1})
+MongoInvalidArgumentError: Invalid sort direction: -2
+studentdb> db.emp.find().sort({sal:1})
+[
+  { _id: 1, name: 'A', sal: 10000.5, gender: 'FEMALE' },
+  { _id: 2, name: 'B', sal: 20000.5, gender: 'FEMALE' },
+  { _id: 3, name: 'C', sal: 30000.5, gender: 'FEMALE' },
+  { _id: 4, name: 'C', sal: 40000.5, gender: 'FEMALE' }
+]
+studentdb> db.emp.find().sort({sal:-1})
+[
+  { _id: 4, name: 'C', sal: 40000.5, gender: 'FEMALE' },
+  { _id: 3, name: 'C', sal: 30000.5, gender: 'FEMALE' },
+  { _id: 2, name: 'B', sal: 20000.5, gender: 'FEMALE' },
+  { _id: 1, name: 'A', sal: 10000.5, gender: 'FEMALE' }
+]
+studentdb> db.emp.find().sort({sal:-1}).limit(1)
+[ { _id: 4, name: 'C', sal: 40000.5, gender: 'FEMALE' } ]
+studentdb> db.emp.find({},{name:1}).sort({sal:-1}).limit(1)
+[ { _id: 4, name: 'C' } ]
+studentdb> db.emp.find()
+[
+  { _id: 1, name: 'A', sal: 10000.5, gender: 'FEMALE' },
+  { _id: 2, name: 'B', sal: 20000.5, gender: 'FEMALE' },
+  { _id: 3, name: 'C', sal: 30000.5, gender: 'FEMALE' },
+  { _id: 4, name: 'C', sal: 40000.5, gender: 'FEMALE' }
+]
+studentdb> db.emp.updateMany({sal:{$gt:20000.5}},{$set:{gender:"MALE"}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 2,
+  modifiedCount: 2,
+  upsertedCount: 0
+}
+studentdb> db.emp.find()
+[
+  { _id: 1, name: 'A', sal: 10000.5, gender: 'FEMALE' },
+  { _id: 2, name: 'B', sal: 20000.5, gender: 'FEMALE' },
+  { _id: 3, name: 'C', sal: 30000.5, gender: 'MALE' },
+  { _id: 4, name: 'C', sal: 40000.5, gender: 'MALE' }
+]
+studentdb> db.emp.updateMany({sal:{$gt:20000}},{$set:{gender:"MALE"}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 3,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+studentdb> db.emp.find()
+[
+  { _id: 1, name: 'A', sal: 10000.5, gender: 'FEMALE' },
+  { _id: 2, name: 'B', sal: 20000.5, gender: 'MALE' },
+  { _id: 3, name: 'C', sal: 30000.5, gender: 'MALE' },
+  { _id: 4, name: 'C', sal: 40000.5, gender: 'MALE' }
+]
+studentdb> db.emp.find({gender:{$in:["MALE","FEMALE"]}})
+[
+  { _id: 1, name: 'A', sal: 10000.5, gender: 'FEMALE' },
+  { _id: 2, name: 'B', sal: 20000.5, gender: 'MALE' },
+  { _id: 3, name: 'C', sal: 30000.5, gender: 'MALE' },
+  { _id: 4, name: 'C', sal: 40000.5, gender: 'MALE' }
+]
+studentdb> db.emp.find({gender:{$nin:["MALE"]}})
+[ { _id: 1, name: 'A', sal: 10000.5, gender: 'FEMALE' } ]
+studentdb> db.emp.updateOne({_id:1},{$set:{gender:"FEMALE"}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+studentdb> db.emp.renameCollection("employee")
+{ ok: 1 }
+studentdb> show collections
+employee
+student
+studentdb> db.emp.find({$and:[{name:"C"},{sal:{$lt:40000.5}}]})
+
+studentdb> db.emp.find({$and:[{name:"C"},{sal:{$gt:30000.5}}]})
+
+studentdb> db.emp.renameCollection("emp")
+MongoServerError: Can't rename a collection to itself
+studentdb> db.employee.renameCollection("emp")
+{ ok: 1 }
+studentdb> show collections
+emp
+student
+studentdb> db.emp.find({$and:[{name:"C"},{sal:{$gt:30000.5}}]})
+[ { _id: 4, name: 'C', sal: 40000.5, gender: 'MALE' } ]
+studentdb> db.emp.find({$or:[{name:"C"},{sal:{$lt:30000.5}}]})
+[
+  { _id: 1, name: 'A', sal: 10000.5, gender: 'FEMALE' },
+  { _id: 2, name: 'B', sal: 20000.5, gender: 'MALE' },
+  { _id: 3, name: 'C', sal: 30000.5, gender: 'MALE' },
+  { _id: 4, name: 'C', sal: 40000.5, gender: 'MALE' }
+]
+studentdb> db.emp.updateMany({},{$rename:{sal:"salary"}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 4,
+  modifiedCount: 4,
+  upsertedCount: 0
+}
+studentdb> db.emp.find()
+[
+  { _id: 1, name: 'A', gender: 'FEMALE', salary: 10000.5 },
+  { _id: 2, name: 'B', gender: 'MALE', salary: 20000.5 },
+  { _id: 3, name: 'C', gender: 'MALE', salary: 30000.5 },
+  { _id: 4, name: 'C', gender: 'MALE', salary: 40000.5 }
+]
+studentdb>
+
+
+
+
+
+
+
+
+
+

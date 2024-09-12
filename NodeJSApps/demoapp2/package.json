@@ -1,0 +1,18 @@
+{
+  "name": "demoapp2",
+  "version": "1.0.0",
+  "description": "NODE JS DEMO APP 2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "MSWD"
+  ],
+  "author": "MOHAMMAD ADNAN SHARIFF",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodemon": "^3.0.3"
+  }
+}

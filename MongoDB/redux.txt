@@ -1,0 +1,17 @@
+redux:
+redux stands for predictable statee container for javascript applications. it is a state management library primarily used with react or any other view library for 
+managing the application in a predictable way redux provieds a centralized storage(store) to manage the entire application it provides a consistant way to manage state changes
+
+
+Official state: https:// redux.js.org/
+
+import terms:
+1. Action: plain javascript objects that represents events or user interactions that occur in. Actions are dispacted to update the dis
+2. State: that data that representing the current condition or snapshot of a application at a given time.
+3. Reducer: A pure function that takes the current  state and an action as two arguments that takes current state and current action as two arguments and returns the useState.It specify how the application state changes in response to the actions 
+4. Store : The single source of entire application state, it holds the complete state tree of the application and allow access to state and dispacting actions etc.
+5. Action Creator: the funtion that creates and returns action object
+6. Provider: a component provided by react-redux library that allows redux to be allowed with react. the provider component wraps the root component of the application and makes the redux store available to all the components in the componentary
+7. Dispatch :  a method provided by redux store to dispatch 
+
+Slice: it is a collection of redux related logic for a specific feature or part of your application state it includes the initial state, reducer function ,action 

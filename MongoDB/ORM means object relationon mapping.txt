@@ -1,0 +1,9 @@
+ORM means object relationon mapping
+
+class-->table
+attribute->column
+object->record/tuple
+
+JPA means java standard where as hibernate means implementation of JPA 
+
+EJB stands for Enterprise JAVA 

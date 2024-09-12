@@ -1,0 +1,15 @@
+{
+  "name": "demoapp1",
+  "version": "1.0.0",
+  "description": "NODE JS DEMO APP 1",
+  "main": "demo1.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "MERN",
+    "MSWD"
+  ],
+  "author": "MOHAMMAD ADNAN SHARIFF",
+  "license": "ISC"
+}

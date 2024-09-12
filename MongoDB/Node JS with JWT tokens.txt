@@ -1,0 +1,46 @@
+Node JS with JWT tokens:
+
+JWT stands fro JSON Web Token, which represents based64 encoded characters
+
+we need a package called as jsonwebtoken 
+
+Authentication: 
+It is  a process of checking credentials of a user.
+
+Generally, email and password or username and password
+
+Operation : Login/Sign in 
+
+Authorization:after successful authentication, if you want to perform an specific operation it will check the role.(role based access)
+
+example: ERP  (admin,student,faculty)
+
+Steps: 
+1. creation of express server.
+2. Connection to MongoDB Compass/Atlas
+3. using a package called as MongoDB 
+4. Generate Token (after successful login)
+5. Two roles (admin, user)
+
+
+admin : insert employee
+user: view employees
+
+5. while performing any operation, we have to check the token & role also.
+
+
+next() is a method which represents chain of actions
+
+whenever you provide token as input then it will based considered
+
+bearer <token>
+
+
+
+
+admin token:
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzEwNTY2NDEzLCJleHAiOjE3MTA1NzAwMTN9.eqeMC2cytZphhE_IouN02Qx14Pe-2xVuC9c8vGEEktY
+
+
+user token:
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJyb2xlIjoidXNlciIsImlhdCI6MTcxMDU2NjQ1OSwiZXhwIjoxNzEwNTcwMDU5fQ._5IhUEv2kDFI8pDXHyvE8HoDlHubbvIF-VCivxrPotk
